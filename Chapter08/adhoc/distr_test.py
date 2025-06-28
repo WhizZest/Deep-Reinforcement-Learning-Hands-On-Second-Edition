@@ -1,10 +1,7 @@
 import sys
 import numpy as np
-
+sys.path.append("./Chapter08")
 import lib.dqn_extra
-
-sys.path.append("./")
-
 from lib import common
 
 import matplotlib as mpl
@@ -38,7 +35,7 @@ if __name__ == "__main__":
     src_hist = np.zeros(shape=(1, N_ATOMS), dtype=np.float32)
     src_hist[0, N_ATOMS//2+1] = 1.0
     proj_hist = lib.dqn_extra.distr_projection(src_hist, np.array([2], dtype=np.float32), np.array([False]),
-                                               Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               gamma=0.9)
     save_distr(src_hist[0], proj_hist[0], "peak-r=2")
 
     # normal distribution
@@ -47,34 +44,34 @@ if __name__ == "__main__":
 
     src_hist = hist[0]
     proj_hist = lib.dqn_extra.distr_projection(np.array([src_hist]), np.array([2], dtype=np.float32), np.array([False]),
-                                               Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               gamma=0.9)
     save_distr(hist[0], proj_hist[0], "normal-r=2")
 
     # normal distribution, but done episode
     proj_hist = lib.dqn_extra.distr_projection(np.array([src_hist]), np.array([2], dtype=np.float32), np.array([True]),
-                                               Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               gamma=0.9)
     save_distr(hist[0], proj_hist[0], "normal-done-r=2")
 
     # clipping for out-of-range distribution
     proj_dist = lib.dqn_extra.distr_projection(np.array([src_hist]), np.array([10], dtype=np.float32), np.array([False]),
-                                               Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               gamma=0.9)
     save_distr(hist[0], proj_dist[0], "normal-r=10")
 
     # test both done and not done, unclipped
     proj_hist = lib.dqn_extra.distr_projection(np.array([src_hist, src_hist]), np.array([2, 2], dtype=np.float32),
-                                               np.array([False, True]), Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               np.array([False, True]), gamma=0.9)
     save_distr(src_hist, proj_hist[0], "both_not_clip-01-incomplete")
     save_distr(src_hist, proj_hist[1], "both_not_clip-02-complete")
 
     # test both done and not done, clipped right
     proj_hist = lib.dqn_extra.distr_projection(np.array([src_hist, src_hist]), np.array([10, 10], dtype=np.float32),
-                                               np.array([False, True]), Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               np.array([False, True]), gamma=0.9)
     save_distr(src_hist, proj_hist[0], "both_clip-right-01-incomplete")
     save_distr(src_hist, proj_hist[1], "both_clip-right-02-complete")
 
     # test both done and not done, clipped left
     proj_hist = lib.dqn_extra.distr_projection(np.array([src_hist, src_hist]), np.array([-10, -10], dtype=np.float32),
-                                               np.array([False, True]), Vmin, Vmax, N_ATOMS, gamma=0.9)
+                                               np.array([False, True]), gamma=0.9)
     save_distr(src_hist, proj_hist[0], "both_clip-left-01-incomplete")
     save_distr(src_hist, proj_hist[1], "both_clip-left-02-complete")
 
